@@ -6,6 +6,7 @@ require 'slim'
 require 'context'
 
 require 'benchmark/ips'
+require 'benchmark/memory'
 require 'tilt'
 require 'erubi'
 require 'erb'
@@ -41,6 +42,13 @@ class SlimBenchmarks
 
   def run
     Benchmark.ips do |x|
+      @benches.each do |name, block|
+        x.report(name.to_s, &block)
+      end
+      x.compare!
+    end
+
+    Benchmark.memory do |x|
       @benches.each do |name, block|
         x.report(name.to_s, &block)
       end
